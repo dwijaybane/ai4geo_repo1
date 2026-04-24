@@ -17,15 +17,15 @@ class ICLRDataset(Dataset):
             self.imgs = imgs[gts > -1][idx]
             self.areas = areas[gts > -1][idx]
             self.field_masks = field_masks[gts > -1][idx]
-            self.gts = gts[gts > -1][idx]            
-        
+            self.gts = gts[gts > -1][idx]
+
         self.split_type = split_type
         self.feat_arr = [i for i in range(imgs.shape[2]) if i != 10] #remove B11 from features
-        
+
     def __len__(self):
         return self.imgs.shape[0]
-    
-    def augment(self, img, mask):        
+
+    def augment(self, img, mask):
         p = np.random.random(3)
         ang = np.random.uniform(-10, 10)
 
@@ -42,7 +42,7 @@ class ICLRDataset(Dataset):
         if p[1] > 0.5:
             mask[0] = np.flipud(mask[0])
         if p[2] > 0.5:
-            mask[0] = ndimage.rotate(mask[0], ang, reshape = False)        
+            mask[0] = ndimage.rotate(mask[0], ang, reshape = False)
         for i in range(img.shape[0]):
             for j in range(img.shape[1]):
                 if p[1] > 0.5:
@@ -52,7 +52,7 @@ class ICLRDataset(Dataset):
         return img, mask
 
     def crop(self, img, mask):
-        #randomly take a (16,16) crop from training image 
+        #randomly take a (16,16) crop from training image
         size = 16
         while True:
             i = np.random.randint(0, 32 - size)

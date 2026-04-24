@@ -19,7 +19,7 @@ class ConvGRUNet(nn.Module):
 
   def init_hidden(self, n):
     return torch.zeros((2*3,n,128), dtype = torch.float32).cuda()
-  
+
   def forward(self, x, mask):
     sh = x.shape
     #conv net is shared among time steps
@@ -37,7 +37,7 @@ class ConvGRUNet(nn.Module):
     #apply GRU
     h = self.init_hidden(sh[0])
     out, h = self.gru(out, h)
-    
+
     #use last time step for classification
     out = out[:,-1]
     out = self.linear(out)
@@ -58,7 +58,7 @@ class SmallConvGRUNet(nn.Module):
 
   def init_hidden(self, n):
     return torch.zeros((2,n,128), dtype = torch.float32).cuda()
-  
+
   def forward(self, x, mask):
     sh = x.shape
     x = x.view(sh[0]*sh[1], sh[2], sh[3], sh[4])
@@ -75,7 +75,7 @@ class SmallConvGRUNet(nn.Module):
     #apply GRU
     h = self.init_hidden(sh[0])
     out, h = self.gru(out, h)
-    
+
     #use last time step for classification
     out = F.leaky_relu(out[:,-1])
     out = self.linear(out)
